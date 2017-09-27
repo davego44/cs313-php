@@ -33,13 +33,13 @@
 	}
 	
 	function displayPlaces() {
-		if(isset($_POST['invite'])){
-			if (is_array($_POST['invite'])) {
+		if(isset($_POST['places'])){
+			if (is_array($_POST['places'])) {
 				foreach($_POST["places"] as $value){
 					echo $value;
 				}
 			} else {
-				$value = $_POST['invite'];
+				$value = $_POST['places'];
 				echo $value;
 			}
 		}
