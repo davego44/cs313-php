@@ -25,7 +25,7 @@
 
 	function display() {
 		echo "Name: " . $_POST["name"];
-		echo "Email: " . $_POST["email"];
+		echo "Email: " . "<a href='mailto:" . $_POST["email"] . "'>" . $_POST["email"] ."</a>";
 		echo "Major: " . $_POST["major"];
 		echo "Places Visited: ";
 		displayPlaces();
