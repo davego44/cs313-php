@@ -10,10 +10,7 @@
 	$dbName = ltrim($dbopts["path"],'/');
 
 	$db = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPassword);
-	
-	if($_SERVER["REQUEST_METHOD"] == "POST") {
-		
-	}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,7 +40,7 @@
 			if(isset($_POST['book'])) {
 				foreach ($db->query("SELECT * FROM teamAct.scriptures WHERE book = '$_POST[book]'") as $row)
 				{
-				  echo '<span class="boldScrip">' . $row['book'] . ' ' . $row['chapter'] . ':' . $row['verse'] . '</span> - "' . $row['content'] . '"';
+				  echo '<a href="week5TeamActContent.php?id=' . $row['id'] . '"><span class="boldScrip">' . $row['book'] . ' ' . $row['chapter'] . ':' . $row['verse'] . '</span></a>';
 				  echo '<br/>';
 				}
 			}
