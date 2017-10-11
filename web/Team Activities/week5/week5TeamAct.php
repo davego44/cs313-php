@@ -10,6 +10,10 @@
 	$dbName = ltrim($dbopts["path"],'/');
 
 	$db = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPassword);
+	
+	if($_SERVER["REQUEST_METHOD"] == "POST") {
+		
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,6 +32,20 @@
 			{
 			  echo '<span class="boldScrip">' . $row['book'] . ' ' . $row['chapter'] . ':' . $row['verse'] . '</span> - "' . $row['content'] . '"';
 			  echo '<br/>';
+			}
+		?>
+		<br/>
+		<form action="" method="POST">
+			<label for="book">Search Book: </label><input type="text" name="book"/>
+			<input type="submit" value="Search"/>
+		</form>
+		<?php
+			if(isset($_POST['book'])) {
+				foreach ($db->query("SELECT * FROM teamAct.scriptures WHERE book = '$_POST[book]'") as $row)
+				{
+				  echo '<span class="boldScrip">' . $row['book'] . ' ' . $row['chapter'] . ':' . $row['verse'] . '</span> - "' . $row['content'] . '"';
+				  echo '<br/>';
+				}
 			}
 		?>
 	</body>
