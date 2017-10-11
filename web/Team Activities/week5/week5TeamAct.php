@@ -26,7 +26,7 @@
 		<?php
 			foreach ($db->query("SELECT * FROM teamAct.scriptures") as $row)
 			{
-			  echo '<span class="boldScrip">' . $row['book'] . ' ' . $row['chapter'] . ':' $row['verse'] . '</span> - \"' . $row['content'] . '\"';
+			  echo '<span class=\"boldScrip\">' . $row['book'] . ' ' . $row['chapter'] . ':' $row['verse'] . '</span> - \"' . $row['content'] . '\"';
 			  echo '<br/>';
 			}
 		?>
