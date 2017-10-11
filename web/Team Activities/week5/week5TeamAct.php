@@ -16,6 +16,9 @@
 	<head>
 		<title>Scripture Resources</title>
 		<style>
+			.boldScrip {
+				font-weight: bold;
+			}
 		</style>
 	</head>
 	<body>
@@ -23,7 +26,7 @@
 		<?php
 			foreach ($db->query("SELECT * FROM teamAct.scriptures") as $row)
 			{
-			  echo 'chapter: ' . $row['chapter'];
+			  echo '<span class="boldScrip">' . $row['book'] . ' ' . $row['chapter'] . ':' $row['verse'] . '</span> - \"' . $row['content'] . '\"';
 			  echo '<br/>';
 			}
 		?>
