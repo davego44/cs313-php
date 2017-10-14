@@ -103,10 +103,12 @@
 				</p>
 				<p>
 					<div style="display:inline;">
-						<button style="display:inline;" onclick="CloseTransferWindow()">Cancel</button>
-						<form action="" method="POST" style="display:inline;margin-left:20px;">
+						<form action="" method="POST">
+							<label for="amount">Amount: $</label>
+							<input type="text" name="amount"/><br/><br/>
+							<input type="button" onclick="CloseTransferWindow()" value="Cancel"/>
 							<input type="hidden" name="type" value="transfer"/>
-							<input type="submit" value="Confirm Transfer"/>
+							<input type="submit" value="Confirm Transfer" style="margin-left:20px;"/>
 						</form>
 					</div>
 				</p>

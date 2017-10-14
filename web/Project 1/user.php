@@ -10,10 +10,11 @@
 	<body>
 		<h1>David Banking</h1>
 		<h2>Personal Information</h2>
+		<p>Changing info is not implemented yet.</p>
 		<form action="home.php">
 			<input type="submit" value="Back"/>
 		</form>
-		<br/>
+		<br/><br/>
 		<?php
 			$statement = $db->prepare("SELECT username, first_name, middle_name, last_name, email, phone, address, birthdate, drivers_lic FROM project.user WHERE id=$_SESSION[user]");
 			$statement->execute();
