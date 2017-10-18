@@ -77,11 +77,12 @@
 			<label for="content">Content</label>
 			<textarea name="content" width="20" height="20" value="<?php echo $content;?>"><br/>
 			<span style="color:red;">* <?php echo $contentError;?></span><br/>
-			<label for="topic">Topic</label>
+			<label for="topic[]">Topic</label>
 			<?php
 				$st = $db->prepare("SELECT name FROM teamact.topics");
 				$st->execute();
 				while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+					echo "hello";
 					echo '<input type="checkbox" name="topic[]" value="' . $row['name'] . '">' . $row['name'] . '<br/>';
 				}
 			?>		
