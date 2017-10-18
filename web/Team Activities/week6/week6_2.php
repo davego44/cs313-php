@@ -24,7 +24,7 @@
 			while($scripture = $st->fetch(PDO::FETCH_ASSOC)) {
 				echo $scripture['book'] . " " . $scripture['chapter'] . " " . $scripture['verse'] . " " . $scripture['content'];
 				echo "<br/>";
-				$stTwo = $db->prepare("SELECT * FROM teamact.topics AS t INNER JOIN teamact.scripture_topics AS st ON t.id = st.topic_id AND st.scripture_id = $scripture[id]");
+				$stTwo = $db->prepare("SELECT name FROM scripture_topics st INNER JOIN topics t ON t.id = st.topic_id WHERE st.student_id = $scripture[id]");
 				$stTwo->execute();
 				while($topic = $stTwo->fetch(PDO::FETCH_ASSOC)) {
 					echo $topic['name'] . "<br/>";
