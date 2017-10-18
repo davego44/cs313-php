@@ -22,12 +22,13 @@
 			$st = $db->prepare("SELECT * FROM teamact.scriptures");
 			$st->execute();
 			while($scripture = $st->fetch(PDO::FETCH_ASSOC)) {
-				echo $scripture['book'] . " " . $scripture['chapter'] . " " . $scripture['verse'] . " " . $scripture['content'];
+				echo "$scripture[book] $scripture[chapter] $scripture[verse] $scripture[content]";
 				echo "<br/>";
-				$stTwo = $db->prepare("SELECT t.name FROM teamact.scripture_topics st INNER JOIN teamact.topics t ON t.id = st.topic_id WHERE st.scripture_id = $scripture['id']");
+				$stTwo = $db->prepare("SELECT t.name FROM teamact.scripture_topics st INNER JOIN teamact.topics t ON t.id = st.topic_id WHERE st.scripture_id = :scripture_id");
+				$stTwo->bindValue(':scripture_id', $scripture['id']);
 				$stTwo->execute();
 				while($topic = $stTwo->fetch(PDO::FETCH_ASSOC)) {
-					echo $topic['name'] . "<br/>";
+					echo "$topic['name']<br/>";
 				}
 				echo "<br/>";
 			}
