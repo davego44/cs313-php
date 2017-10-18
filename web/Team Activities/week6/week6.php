@@ -44,7 +44,13 @@
 		if (!empty($_POST["book"]) && !empty($_POST["chapter"]) && 
 			!empty($_POST["verse"])  && !empty($_POST["topic"]) &&
 			!empty($_POST["content"])) {
-				//add to db
+				$st = $db->prepare("INSERT INTO teamact.scriptures (book, chapter, verse, content) VALUES(:book, :chapter, :verse, :content);");
+				$st->execute(array(':book' => $book, ':chapter' => $chapter, ':verse' => $verse, ':content' => $content));
+				$id = $db->lastInsertId('scriptures_id_seq');
+				foreach ($topic as $item) {
+					$st = $db->prepare("INSERT INTO teamact.topics (topic_id, scripture_id) VALUES ((SELECT id FROM teamact.topics WHERE name = $item), $id)");
+					$st->execute();
+				}
 				header("Location: week6_2.php");
 		}
 	}
@@ -75,14 +81,13 @@
 			<input type="text" pattern="[0-9]+\-?[0-9]+" title="Format 1-2 or 1" name="verse" value="<?php echo $verse;?>">
 			<span style="color:red;">* <?php echo $verseError; ?></span><br/>
 			<label for="content">Content</label>
-			<textarea name="content" rows="10" cols="5"><?php echo $content;?></textarea><br/>
+			<textarea name="content" rows="5" cols="10"><?php echo $content;?></textarea><br/>
 			<span style="color:red;">* <?php echo $contentError;?></span><br/>
-			<label for="topic[]">Topic</label>
+			<label for="topic[]">Topic</label><br/>
 			<?php
 				$st = $db->prepare("SELECT name FROM teamact.topics");
 				$st->execute();
 				while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-					echo "hello";
 					echo '<input type="checkbox" name="topic[]" value="' . $row['name'] . '">' . $row['name'] . '<br/>';
 				}
 			?>		
