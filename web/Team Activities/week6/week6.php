@@ -75,7 +75,7 @@
 			<input type="text" pattern="[0-9]+\-?[0-9]+" title="Format 1-2 or 1" name="verse" value="<?php echo $verse;?>">
 			<span style="color:red;">* <?php echo $verseError; ?></span><br/>
 			<label for="content">Content</label>
-			<textarea name="content" width="20" height="20" value="<?php echo $content;?>"><br/>
+			<textarea name="content" rows="10" cols="5"><?php echo $content;?></textarea><br/>
 			<span style="color:red;">* <?php echo $contentError;?></span><br/>
 			<label for="topic[]">Topic</label>
 			<?php
