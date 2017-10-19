@@ -51,7 +51,7 @@
 					$stTwo = $db->prepare("INSERT INTO teamact.scripture_topics (topic_id, scripture_id) VALUES((SELECT id FROM teamact.topics WHERE name = '$value'), $id)");
 					$stTwo->execute();
 				}
-				//header("Location: week6_2.php");
+				header("Location: week6_2.php");
 		}
 	}
 	
