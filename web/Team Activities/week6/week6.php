@@ -42,15 +42,14 @@
 			$topicError = "Topic is required";
 		}
 		if (!empty($_POST["book"]) && !empty($_POST["chapter"]) && 
-			!empty($_POST["verse"])  && !empty($_POST["topic"]) &&
+			!empty($_POST["verse"]) && !empty($_POST["topic"]) &&
 			!empty($_POST["content"])) {
 				$st = $db->prepare("INSERT INTO teamact.scriptures (book, chapter, verse, content) VALUES(:book, :chapter, :verse, :content)");
 				$st->execute(array(':book' => $book, ':chapter' => $chapter, ':verse' => $verse, ':content' => $content));
-				$id = $db->lastInsertId();
-				var_dump($id);
+				$id = (int)$db->lastInsertId();
 				foreach($_POST['topic'] as $key => $value) {
-					//$st = $db->prepare("INSERT INTO teamact.scripture_topics (topic_id, scripture_id) VALUES ((SELECT id FROM teamact.topics WHERE name = $value), $id)");
-					//$st->execute();
+					$st = $db->prepare("INSERT INTO teamact.scripture_topics (topic_id, scripture_id) VALUES((SELECT id FROM teamact.topics WHERE name = $value), $id)");
+					$st->execute();
 				}
 				//header("Location: week6_2.php");
 		}
