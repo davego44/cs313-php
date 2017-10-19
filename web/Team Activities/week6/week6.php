@@ -48,8 +48,9 @@
 				$st->execute(array(':book' => $book, ':chapter' => $chapter, ':verse' => $verse, ':content' => $content));
 				$id = $db->lastInsertId();
 				foreach ($_POST['topic'] as $key => $value) {
-					$st = $db->prepare("INSERT INTO teamact.scripture_topics (topic_id, scripture_id) VALUES ((SELECT id FROM teamact.topics WHERE name = $value), $id)");
-					$st->execute();
+					var_dump($value);
+					//$st = $db->prepare("INSERT INTO teamact.scripture_topics (topic_id, scripture_id) VALUES ((SELECT id FROM teamact.topics WHERE name = $value), $id)");
+					//$st->execute();
 				}
 				//header("Location: week6_2.php");
 		}
