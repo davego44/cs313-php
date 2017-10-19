@@ -11,6 +11,8 @@
 
 	$db = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPassword);
 
+	$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+	
 	$book = $chapter = $verse = $content = "";
 	$topic = array();
 	$bookError = $chapterError = $verseError = $contentError = $topicError = "";
@@ -44,7 +46,7 @@
 		if (!empty($_POST["book"]) && !empty($_POST["chapter"]) && 
 			!empty($_POST["verse"])  && !empty($_POST["topic"]) &&
 			!empty($_POST["content"])) {
-				$st = $db->prepare("INSERT INTO teamact.scriptures (book, chapter, verse, content) VALUES(:book, :chapter, :verse, :content);");
+				$st = $db->prepare("INSERT INTO teamact.scriptures (book, chapter, verse, content) VALUES(:book, :chapter, :verse, :content)");
 				$st->execute(array(':book' => $book, ':chapter' => $chapter, ':verse' => $verse, ':content' => $content));
 				$id = $db->lastInsertId();
 				foreach ($topic as $item) {
