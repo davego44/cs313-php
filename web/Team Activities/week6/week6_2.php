@@ -30,7 +30,7 @@
 				$stTwo->bindValue(':scripture_id', $scripture['id']);
 				$stTwo->execute();
 				while($topic = $stTwo->fetch(PDO::FETCH_ASSOC)) {
-					echo "$topic['name']<br/>";
+					echo "$topic[name]<br/>";
 				}
 				echo "<br/>";
 			}
