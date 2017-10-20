@@ -106,7 +106,7 @@
 					</div><br/><br/>
 					<div class="form-group">
 						<label for="amount">Amount: $</label>
-						<input type="text" name="amount" pattern="[0-9]*\.?[0-9]{2}" title="May contain only numbers. If there is a decimal, two numbers must follow." class="form-control"/>
+						<input type="text" name="amount" pattern="[0-9]*\.[0-9]{2}" title="Can contain only numbers and a decimal. There must be a decimal followed by two numbers." class="form-control"/>
 					</div><br/><br/>
 					<input type="button" onclick="CloseTransferWindow()" value="Cancel" class="btn btn-primary"/>
 					<input type="hidden" name="account_id" value="<?php echo $_POST['account_id'];?>"/>
