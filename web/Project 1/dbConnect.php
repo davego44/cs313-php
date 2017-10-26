@@ -4,7 +4,7 @@
 		$dbUrl = getenv('DATABASE_URL');
 
 		if (!isset($dbUrl) || empty($dbUrl)) {
-			$dbUrl = "postgres://postgres:E1davego@localhost:5432/postgres";
+			$dbUrl = "postgres://postgres:password@localhost:5432/postgres";
 		}
 		
 		$dbopts = parse_url($dbUrl);
