@@ -12,7 +12,7 @@
 	
 	$login_error = $identityError = $firstError = $lastError = $usernameError = $passwordError = "";
 	$emailError = $driversLicError = $addressError = $phoneError = $SSNError = $birthdateError = "";
-	$createAccountError = "";
+	$conPasswordError = $createAccountError = "";
 	
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		if ($_POST['type'] == "login") {
@@ -51,6 +51,14 @@
 			} else {
 				$password = test_input($_POST['password']);
 			}
+			if (empty($_POST['conPassword'])) {
+				$conPasswordError = "You must confirm your password.";
+			} else {
+				if ($_POST['conPassword'] !== $_POST['password']) {
+					$passwordError = "Passwords must match.";
+					$conPasswordError = "Passwords must match.";
+				}
+			}
 			if (empty($_POST['email'])) {
 				$emailError = "You must enter your email.";
 			} else {
@@ -81,29 +89,30 @@
 			} else {
 				$birthdate = test_input($_POST['birthdate']);
 			}
-			if (!empty($_POST['identity'])   && !empty($_POST['firstName']) && !empty($_POST['lastName']) &&
-			    !empty($_POST['username'])   && !empty($_POST['password'])  && !empty($_POST['email'])    &&
-				!empty($_POST['driversLic']) && !empty($_POST['address'])   && !empty($_POST['phone'])    &&
-				!empty($_POST['phone'])      && !empty($_POST['ssn'])       && !empty($_POST['birthdate'])) {
-					$middle = test_input($middle);
-					try {
-						$st = $db->prepare("INSERT INTO project.user (username, password, first_name, middle_name, last_name, email, phone, address, ssn, birthdate, drivers_lic)
-										VALUES(:username, :password, :first_name, :middle_name, :last_name, :email, :phone, :address, :ssn, :birthdate, :drivers_lic)");
-						$st->execute(array(':username' => $username, ':password' => $password, 
-										   ':first_name' => $first, ':middle_name' => $middle, 
-										   ':last_name' => $last, ':email' => $email,
-										   ':phone' => str_replace("-", "", $phone), ':address' => $address, 
-										   ':ssn' => str_replace("-", "", $SSN), ':birthdate' => $birthdate,
-										   ':drivers_lic' => $driversLic));
-						$_SESSION['user'] = (int)$db->lastInsertId();
-						header("location: home.php");
-					} catch (PDOException $e) {
-						$createAccountError = "Unable to create account.";
-						if ($e->getCode() == 23505) {
-							$usernameError = "Username is already taken.";
+			if (!empty($_POST['identity'])    && !empty($_POST['firstName']) && !empty($_POST['lastName'])  &&
+			    !empty($_POST['username'])    && !empty($_POST['password'])  && !empty($_POST['email'])     &&
+				!empty($_POST['driversLic'])  && !empty($_POST['address'])   && !empty($_POST['phone'])     &&
+				!empty($_POST['phone'])       && !empty($_POST['ssn'])       && !empty($_POST['birthdate']) &&
+				!empty($_POST['conPassword']) && $_POST['conPassword'] == $_POST['password']) {
+						$middle = test_input($middle);
+						try {
+							$st = $db->prepare("INSERT INTO project.user (username, password, first_name, middle_name, last_name, email, phone, address, ssn, birthdate, drivers_lic)
+											VALUES(:username, :password, :first_name, :middle_name, :last_name, :email, :phone, :address, :ssn, :birthdate, :drivers_lic)");
+							$st->execute(array(':username' => $username, ':password' => $password, 
+											   ':first_name' => $first, ':middle_name' => $middle, 
+											   ':last_name' => $last, ':email' => $email,
+											   ':phone' => str_replace("-", "", $phone), ':address' => $address, 
+											   ':ssn' => str_replace("-", "", $SSN), ':birthdate' => $birthdate,
+											   ':drivers_lic' => $driversLic));
+							$_SESSION['user'] = (int)$db->lastInsertId();
+							header("location: home.php");
+						} catch (PDOException $e) {
+							$createAccountError = "Unable to create account.";
+							if ($e->getCode() == 23505) {
+								$usernameError = "Username is already taken.";
+							}
 						}
-					}
-				}
+			}
 		}
 	}
 	
@@ -119,6 +128,17 @@
 	<head>
 		<title>David Banking Login</title>
 		<link rel="stylesheet" href="login.css">
+		<script>
+			function checkPasswordMatch() {
+				var password = $("#password").val();
+				var conPassword = $("#conPassword").val();
+				
+				if (password != conPassword)
+					$("#conPasswordError").html("Passwords must match.");
+				else
+					$("#conPasswordError").html("");
+			}
+		</script>
 	</head>
 	<body>
 		<div class="top-bar">
@@ -215,19 +235,24 @@
 								</div>
 							</div>
 						</div>
+						<div class="form-group">
+							<label for="username">Username</label><span style="color:red;"> *</span>
+							<input name="username" type="text" class="form-control" aria-describedby="usernameError" maxlength="30" value="<?php echo $username;?>"/>
+							<small id="usernameError" class="form-text text-muted" style="color:red;"><?php echo $usernameError;?></small>
+						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="username">Username</label><span style="color:red;"> *</span>
-									<input name="username" type="text" class="form-control" aria-describedby="usernameError" maxlength="30" value="<?php echo $username;?>"/>
-									<small id="usernameError" class="form-text text-muted" style="color:red;"><?php echo $usernameError;?></small>
+									<label for="password">Password</label><span style="color:red;"> *</span>
+									<input name="password" id="password" type="password" class="form-control" aria-describedby="passwordError" maxlength="30" value="<?php echo $password;?>" onChange="checkPasswordMatch();"/>
+									<small id="passwordError" class="form-text text-muted" style="color:red;"><?php echo $passwordError;?></small>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="password">Password</label><span style="color:red;"> *</span>
-									<input name="password" type="password" class="form-control" aria-describedby="passwordError" maxlength="30" value="<?php echo $password;?>"/>
-									<small id="passwordError" class="form-text text-muted" style="color:red;"><?php echo $passwordError;?></small>
+									<label for="conPassword">Confirm Password</label><span style="color:red;"> *</span>
+									<input name="conPassword" id="conPassword" type="password" class="form-control" aria-describedby="conPasswordError" maxlength="30" onChange="checkPasswordMatch();"/>
+									<small id="conPasswordError" class="form-text text-muted" style="color:red;"><?php echo $conPasswordError;?></small>
 								</div>
 							</div>
 						</div>

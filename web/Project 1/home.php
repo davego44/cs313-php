@@ -7,39 +7,44 @@
 			unset($_SESSION['user']);
 			header("location: login.php");
 		} else if($_POST['type'] == "transfer") {
-			$amount = test_input($_POST['amount']);
-			if ($_POST['fromAcc'] == $_POST['toAcc']) {
-				$message = "You cannot transfer from and to the same account.";
+			if (empty($_POST['amount'])) {
+				$message = "You must enter an amount in to transfer.";
 				echo "<script type='text/javascript'>alert('$message');</script>";
 			} else {
-				$accSt->execute(array(':account_id' => $_POST['fromAcc']));
-				$fromAcc = $accSt->fetch(PDO::FETCH_ASSOC);
-				if ($fromAcc['amount'] - $_POST['amount'] < 0) {
-					$message = "There is not enough money in the account to transfer.";
+				$amount = test_input($_POST['amount']);
+				if ($_POST['fromAcc'] == $_POST['toAcc']) {
+					$message = "You cannot transfer from and to the same account.";
 					echo "<script type='text/javascript'>alert('$message');</script>";
 				} else {
-					try {
-						$db->beginTransaction();
-						$updateSt = $db->prepare("UPDATE project.account SET amount = (amount - :amount) WHERE id = :account_id");
-						$updateSt->execute(array(':amount' => $amount, ':account_id' => $_POST['fromAcc']));
-						$updateSt = $db->prepare("UPDATE project.account SET amount = (amount + :amount) WHERE id = :account_id");
-						$updateSt->execute(array(':amount' => $amount, ':account_id' => $_POST['toAcc']));
-						$updateSt = $db->prepare("INSERT INTO project.history_entry (type_id, info, time, amount)
-													VALUES((SELECT id FROM project.history_type WHERE name = 'Charge'), 'Transaction', current_timestamp, :amount)");
-						$updateSt->execute(array(':amount' => $amount));
-						$id = (int)$db->lastInsertId();
-						$updateSt = $db->prepare("INSERT INTO project.history (account_id, history_entry_id) VALUES(:account_id, $id)");
-						$updateSt->execute(array(':account_id' => $_POST['fromAcc']));
-						$updateSt = $db->prepare("INSERT INTO project.history_entry (type_id, info, time, amount)
-													VALUES((SELECT id FROM project.history_type WHERE name = 'Credit'), 'Transaction', current_timestamp, :amount)");
-						$updateSt->execute(array(':amount' => $amount));
-						$id = (int)$db->lastInsertId();
-						$updateSt = $db->prepare("INSERT INTO project.history (account_id, history_entry_id) VALUES(:account_id, $id)");
-						$updateSt->execute(array(':account_id' => $_POST['toAcc']));
-						$db->commit();
-					} catch (\PDOException $e) {
-						$db->rollBack();
-						echo $e;
+					$accSt->execute(array(':account_id' => $_POST['fromAcc']));
+					$fromAcc = $accSt->fetch(PDO::FETCH_ASSOC);
+					if ($fromAcc['amount'] - $_POST['amount'] < 0) {
+						$message = "There is not enough money in the account to transfer.";
+						echo "<script type='text/javascript'>alert('$message');</script>";
+					} else {
+						try {
+							$db->beginTransaction();
+							$updateSt = $db->prepare("UPDATE project.account SET amount = (amount - :amount) WHERE id = :account_id");
+							$updateSt->execute(array(':amount' => $amount, ':account_id' => $_POST['fromAcc']));
+							$updateSt = $db->prepare("UPDATE project.account SET amount = (amount + :amount) WHERE id = :account_id");
+							$updateSt->execute(array(':amount' => $amount, ':account_id' => $_POST['toAcc']));
+							$updateSt = $db->prepare("INSERT INTO project.history_entry (type_id, info, time, amount)
+														VALUES((SELECT id FROM project.history_type WHERE name = 'Charge'), 'Transaction', current_timestamp, :amount)");
+							$updateSt->execute(array(':amount' => $amount));
+							$id = (int)$db->lastInsertId();
+							$updateSt = $db->prepare("INSERT INTO project.history (account_id, history_entry_id) VALUES(:account_id, $id)");
+							$updateSt->execute(array(':account_id' => $_POST['fromAcc']));
+							$updateSt = $db->prepare("INSERT INTO project.history_entry (type_id, info, time, amount)
+														VALUES((SELECT id FROM project.history_type WHERE name = 'Credit'), 'Transaction', current_timestamp, :amount)");
+							$updateSt->execute(array(':amount' => $amount));
+							$id = (int)$db->lastInsertId();
+							$updateSt = $db->prepare("INSERT INTO project.history (account_id, history_entry_id) VALUES(:account_id, $id)");
+							$updateSt->execute(array(':account_id' => $_POST['toAcc']));
+							$db->commit();
+						} catch (\PDOException $e) {
+							$db->rollBack();
+							echo $e;
+						}
 					}
 				}
 			}
