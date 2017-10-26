@@ -62,8 +62,7 @@
 <html>
 	<head>
 		<title>David Banking</title>
-		<link rel="stylesheet" type="text/css" href="home.css">
-		
+		<link rel="stylesheet" type="text/css" href="format.css">
 	</head>
 	<body>
 		<!-- TRANSFER POPUP -->
@@ -74,7 +73,7 @@
 				<form action="" method="POST" class="form-inline">
 					<div class="form-group">
 						<label for="fromAcc" style="margin-right: 4px;">From</label>
-						<select name="fromAcc" class="form-control">
+						<select name="fromAcc" class="form-control" id="fromAcc" onChange="checkAcc();">
 							<?php
 								$myAccSt->execute(array(':user_id' => $_SESSION['user']));
 								while ($account = $myAccSt->fetch(PDO::FETCH_ASSOC))
@@ -93,7 +92,7 @@
 					</div>
 					<div class="form-group">
 						<label for="toAcc" style="margin: 0px 5px;">To</label>
-						<select name="toAcc" class="form-control">
+						<select name="toAcc" class="form-control" id="toAcc" onChange="checkAcc();">
 							<?php
 								$myAccSt->execute(array(':user_id' => $_SESSION['user']));
 								while ($account = $myAccSt->fetch(PDO::FETCH_ASSOC))
@@ -108,10 +107,13 @@
 								}
 							?>
 						</select>
-					</div><br/><br/>
+					</div><br/>
+					<small id="accountError" class="form-text text-muted" style="color:red;"></small>
+					<br/>
 					<div class="form-group">
 						<label for="amount">Amount: $</label>
-						<input type="text" name="amount" pattern="[0-9]*\.[0-9]{2}" title="Can contain only numbers and a decimal. There must be a decimal followed by two numbers." class="form-control"/>
+						<input type="text" name="amount" onkeyup="checkAmount();" pattern="[0-9]*\.[0-9]{2}" title="Can contain only numbers and a decimal. There must be a decimal followed by two numbers." class="form-control" aria-describedby="amountError" id="amount"/>
+						<br/><small id="amountError" class="form-text text-muted" style="color:red;"></small>
 					</div><br/><br/>
 					<input type="button" onclick="CloseTransferWindow()" value="Cancel" class="btn btn-primary"/>
 					<input type="hidden" name="account_id" value="<?php echo $_POST['account_id'];?>"/>
@@ -217,7 +219,7 @@
 				</tbody>
 			</table>
 		</div>
-		<script type="text/javascript" src="home.js"></script>
+		
 		<script>
 			function postToAccountDetails(ele) {
 				var id = $(ele).attr('var');
@@ -225,8 +227,14 @@
 				$('.account-details').submit();
 			}
 		</script>
+		
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
+		<script src="transfer.js"></script>
+		<link rel="stylesheet" type="text/css" href="transfer.css">
+		
+
 	</body>
 </html>
