@@ -244,14 +244,14 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="password">Password</label><span style="color:red;"> *</span>
-									<input name="password" id="password" type="password" class="form-control" aria-describedby="passwordError" maxlength="30" value="<?php echo $password;?>" onChange="checkPasswordMatch();"/>
+									<input name="password" id="password" type="password" class="form-control" aria-describedby="passwordError" maxlength="30" value="<?php echo $password;?>" onkeyup="checkPasswordMatch();"/>
 									<small id="passwordError" class="form-text text-muted" style="color:red;"><?php echo $passwordError;?></small>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="conPassword">Confirm Password</label><span style="color:red;"> *</span>
-									<input name="conPassword" id="conPassword" type="password" class="form-control" aria-describedby="conPasswordError" maxlength="30" onChange="checkPasswordMatch();"/>
+									<input name="conPassword" id="conPassword" type="password" class="form-control" aria-describedby="conPasswordError" maxlength="30" onkeyup="checkPasswordMatch();"/>
 									<small id="conPasswordError" class="form-text text-muted" style="color:red;"><?php echo $conPasswordError;?></small>
 								</div>
 							</div>
